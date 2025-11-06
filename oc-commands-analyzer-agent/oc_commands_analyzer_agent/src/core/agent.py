@@ -16,7 +16,7 @@ logger = get_python_logger(log_level=settings.PYTHON_LOG_LEVEL)
 
 
 def get_llm_model():
-    """Get the configured LLM model (Ollama or Vertex AI)."""
+    """Get the configured LLM model (Ollama or Anthropic Vertex AI)."""
     if settings.LLM_PROVIDER == "ollama":
         from langchain_ollama import ChatOllama
 
@@ -27,19 +27,18 @@ def get_llm_model():
             model=settings.OLLAMA_MODEL, base_url=settings.OLLAMA_BASE_URL, temperature=0.3
         )
     elif settings.LLM_PROVIDER == "vertex":
-        from langchain_google_vertexai import ChatVertexAI
+        from langchain_anthropic import ChatAnthropic
 
         # Setup Google credentials
         settings.setup_google_credentials()
 
         logger.info(
-            f"Initializing Vertex AI model: {settings.VERTEX_MODEL} "
-            f"in project {settings.VERTEX_PROJECT_ID}"
+            f"Initializing Anthropic Vertex AI model: {settings.VERTEX_MODEL} "
+            f"in project {settings.VERTEX_PROJECT_ID}, region {settings.VERTEX_LOCATION}"
         )
-        return ChatVertexAI(
+        return ChatAnthropic(
             model=settings.VERTEX_MODEL,
-            project=settings.VERTEX_PROJECT_ID,
-            location=settings.VERTEX_LOCATION,
+            anthropic_api_url=f"https://{settings.VERTEX_LOCATION}-aiplatform.googleapis.com/v1/projects/{settings.VERTEX_PROJECT_ID}/locations/{settings.VERTEX_LOCATION}/publishers/anthropic/models/{settings.VERTEX_MODEL}:streamRawPredict",
             temperature=0.3,
         )
     else:
@@ -71,6 +70,8 @@ async def get_oc_analyzer_agent(enable_checkpointing: bool = True):
         logger.info(
             f"Successfully connected to MCP server and loaded {len(tools)} tools"
         )
+        for tool in tools:
+            logger.info(f"Loaded tool: {tool.name if hasattr(tool, 'name') else tool}")
     except Exception as e:
         logger.warning(f"Could not connect to MCP server: {e}")
         logger.info("Running without MCP tools - agent will have limited functionality")
