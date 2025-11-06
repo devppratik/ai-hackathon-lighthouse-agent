@@ -1,11 +1,11 @@
-# OC Commands Analyzer
+# LightHouse Agent - OC Command Analyzer
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12,3.13-blue.svg)](https://www.python.org/downloads/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## 🎯 What Is It?
 
-**OC Commands Analyzer** is an AI-powered platform that helps teams **understand and validate OpenShift CLI (`oc`) commands safely** without executing them. It analyzes command syntax, provides best practices, and generates intelligent recommendations—all in natural language conversations.
+**LightHouse Agent - OC Commands Analyzer** is an AI-powered platform that helps teams **understand and validate OpenShift CLI (`oc`) commands safely** without executing them. It analyzes command syntax, provides best practices, and generates intelligent recommendations—all in natural language conversations.
 
 ### The System
 - **MCP Server** (Port 5002): Backend providing 3 intelligent analysis tools
